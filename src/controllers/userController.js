@@ -30,27 +30,21 @@ const signupUser = async (req, res) => {
 
 const logoutUser = async (req, res) => {
   try {
-    const authHeader = req.headers["authorization"];
-    if (!authHeader) {
-      throw new Error("No token found");
-    }
-    const token = authHeader.replace("Bearer ", "");
-    if (token === "") {
-      throw new Error("No tokens found");
-    }
-    const id = await jwt.decode(token, process.env.JWT_SECRET);
-    const user = await User.findById(id);
-    if (!user) {
-      throw new Error("Not authenticated!");
-    }
-    if (!user.tokens.find(({ token: tok }) => tok === token)) {
-      throw new Error("Invalid token!");
-    }
-    user.tokens = user.tokens.filter(({ token: tok }) => tok !== token);
-    await user.save();
+    req.user.tokens = req.user.tokens.filter(
+      ({ token: tok }) => tok !== req.token
+    );
+    await req.user.save();
     res.send();
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    res.status(500).send({ error: error.message });
+  }
+};
+
+const getLoggedInUser = async (req, res) => {
+  try {
+    res.send({ user: req.user, token: req.token });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
   }
 };
 
@@ -58,4 +52,5 @@ module.exports = {
   signupUser,
   loginUser,
   logoutUser,
+  getLoggedInUser,
 };
