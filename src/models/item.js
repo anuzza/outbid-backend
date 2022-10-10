@@ -13,6 +13,7 @@ const itemSchema = new mongoose.Schema(
     },
     condition: {
       type: String,
+      enum: ["NEW", "USED"],
       required: true,
     },
     starting_amount: {
@@ -21,32 +22,47 @@ const itemSchema = new mongoose.Schema(
     },
     current_bid: {
       type: Number,
-      required: true,
+      default: 0,
     },
     open_bid: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     sold: {
       type: Boolean,
       default: false,
-      required: true,
     },
     creator: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     winner: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
     },
     images: [
       {
         image: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "image",
-        },
-        source_url: {
           type: String,
+        },
+      },
+    ],
+    bids: [
+      {
+        amount: {
+          type: Number,
+          required: true,
+        },
+        bidder: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+        bidded_at: {
+          type: Date,
+          default: Date.now(),
         },
       },
     ],
