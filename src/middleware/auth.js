@@ -11,9 +11,9 @@ const auth = async (req, res, next) => {
       throw new Error();
     }
 
-    if (!user.tokens.find(({ token: tok }) => tok === token)) {
-      throw new Error();
-    }
+    // if (!user.tokens.find(({ token: tok }) => tok === token)) {
+    //   throw new Error();
+    // }
     req.token = token;
     req.user = user;
 
