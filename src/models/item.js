@@ -2,12 +2,11 @@ const mongoose = require("mongoose");
 
 const itemSchema = new mongoose.Schema(
   {
-    name: {
+    product_name: {
       type: String,
       required: true,
     },
-
-    description: {
+    details: {
       type: String,
       required: true,
     },
@@ -16,12 +15,9 @@ const itemSchema = new mongoose.Schema(
       enum: ["NEW", "USED"],
       required: true,
     },
-    starting_amount: {
+    start_bid: {
       type: Number,
       required: true,
-    },
-    current_bid: {
-      type: Number,
       default: 0,
     },
     open_bid: {
@@ -35,7 +31,8 @@ const itemSchema = new mongoose.Schema(
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+//      required: true,
+      default: null,
     },
     winner: {
       type: mongoose.Schema.Types.ObjectId,
@@ -72,3 +69,21 @@ const itemSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+itemSchema.methods.toJSON = function () {
+  const item = this;
+  const itemObject = item.toObject();
+  console.log(itemObject);
+  return itemObject;
+};
+
+itemSchema.statics.findByName = async (product_name) => {
+  const item = await item.findOne({ product_name });
+  if (!item) {
+    throw new Error("No matching item found.");
+  }
+  return item;
+};
+
+const Item = mongoose.model("Item", itemSchema);
+module.exports = Item;
