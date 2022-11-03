@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const UserItem = require("../models/userItem");
 
 const itemSchema = new mongoose.Schema(
   {
@@ -75,5 +76,29 @@ const itemSchema = new mongoose.Schema(
   }
 );
 
+itemSchema.pre("remove", async function (next) {
+  const item = this;
+  await UserItem.deleteMany({
+    item: item,
+  });
+  next();
+});
+
+itemSchema.pre("save", async function (next) {
+  const item = this;
+
+  if (item.isModified("description")) {
+    let des = item.description;
+
+    if (des.includes("\n")) {
+      des = des.replace(/\n/g, "");
+    }
+
+    item.description = des;
+  }
+
+  next();
+});
+
 const Item = mongoose.model("Item", itemSchema);
-module.exports = Recipe;
+module.exports = Item;
