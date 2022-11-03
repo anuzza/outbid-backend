@@ -11,23 +11,25 @@ const itemSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    starting_amount: {
+      type: Number,
+      required: true,
+    },
     condition: {
       type: String,
       enum: ["NEW", "USED"],
       required: true,
     },
-    starting_amount: {
-      type: Number,
-      required: true,
+    active: {
+      type: Boolean,
+      default: true,
     },
+
     current_bid: {
       type: Number,
       default: 0,
     },
-    open_bid: {
-      type: Boolean,
-      default: true,
-    },
+
     sold: {
       type: Boolean,
       default: false,
