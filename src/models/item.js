@@ -10,16 +10,16 @@ const itemSchema = new mongoose.Schema(
 
     description: {
       type: String,
-      required: true,
+      //required: true,
     },
     starting_amount: {
       type: Number,
-      required: true,
+      //required: true,
     },
     condition: {
       type: String,
       enum: ["NEW", "USED"],
-      required: true,
+      //required: true,
     },
     active: {
       type: Boolean,
@@ -38,7 +38,7 @@ const itemSchema = new mongoose.Schema(
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      // required: true,
     },
     winner: {
       type: mongoose.Schema.Types.ObjectId,
@@ -71,34 +71,33 @@ const itemSchema = new mongoose.Schema(
     ],
   },
   {
-    toJSON: true,
     timestamps: true,
   }
 );
 
-itemSchema.pre("remove", async function (next) {
-  const item = this;
-  await UserItem.deleteMany({
-    item: item,
-  });
-  next();
-});
+// itemSchema.pre("remove", async function (next) {
+//   const item = this;
+//   await UserItem.deleteMany({
+//     item: item,
+//   });
+//   next();
+// });
 
-itemSchema.pre("save", async function (next) {
-  const item = this;
+// itemSchema.pre("save", async function (next) {
+//   const item = this;
 
-  if (item.isModified("description")) {
-    let des = item.description;
+//   if (item.isModified("description")) {
+//     let des = item.description;
 
-    if (des.includes("\n")) {
-      des = des.replace(/\n/g, "");
-    }
+//     if (des.includes("\n")) {
+//       des = des.replace(/\n/g, "");
+//     }
 
-    item.description = des;
-  }
+//     item.description = des;
+//   }
 
-  next();
-});
+//   next();
+// });
 
 const Item = mongoose.model("Item", itemSchema);
 module.exports = Item;
