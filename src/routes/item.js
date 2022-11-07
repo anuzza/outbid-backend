@@ -7,6 +7,6 @@ const { addItem } = require("../controllers/itemController");
 
 //const fs = require("fs")
 
-router.post("/", addItem);
+router.post("/", auth, addItem);
 
 module.exports = router;

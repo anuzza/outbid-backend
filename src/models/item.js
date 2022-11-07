@@ -10,16 +10,16 @@ const itemSchema = new mongoose.Schema(
 
     description: {
       type: String,
-      //required: true,
+      required: true,
     },
     starting_amount: {
       type: Number,
-      //required: true,
+      required: true,
     },
     condition: {
       type: String,
       enum: ["NEW", "USED"],
-      //required: true,
+      required: true,
     },
     active: {
       type: Boolean,
