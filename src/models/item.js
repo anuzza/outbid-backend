@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const UserItem = require("../models/userItem");
+const UserItem = require("./userItem");
 
 const itemSchema = new mongoose.Schema(
   {
@@ -11,6 +11,10 @@ const itemSchema = new mongoose.Schema(
     description: {
       type: String,
       required: true,
+    },
+    category: {
+      type: String,
+      // required: true,
     },
     starting_amount: {
       type: Number,
@@ -38,7 +42,7 @@ const itemSchema = new mongoose.Schema(
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      // required: true,
+      // default: null,
     },
     winner: {
       type: mongoose.Schema.Types.ObjectId,
@@ -75,13 +79,13 @@ const itemSchema = new mongoose.Schema(
   }
 );
 
-// itemSchema.pre("remove", async function (next) {
-//   const item = this;
-//   await UserItem.deleteMany({
-//     item: item,
-//   });
-//   next();
-// });
+itemSchema.pre("remove", async function (next) {
+  const item = this;
+  await UserItem.deleteMany({
+    item: item,
+  });
+  next();
+});
 
 // itemSchema.pre("save", async function (next) {
 //   const item = this;
