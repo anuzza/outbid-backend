@@ -805,6 +805,11 @@ accepts@~1.3.8:
     mime-types "~2.1.34"
     negotiator "0.6.3"
 
+amazon-s3-uri@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/amazon-s3-uri/-/amazon-s3-uri-0.1.1.tgz#37afdfa88352ee0c22ac12ea6417a7c725f2b90b"
+  integrity sha512-LklZtJ3lgTFdVpy/5ln0okxdgMdnRmFLRg9FGcJ7DeB5Ez5TCs1DHdmVovcPIxW9tQlA1+QLpGNg1Ig6hv768A==
+
 anymatch@~3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-3.1.2.tgz#c0557c096af32f106198f4f4e2a383537e378716"
