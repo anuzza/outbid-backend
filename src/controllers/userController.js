@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const sendError = require("../utils/error");
 
 //Todo: Refactor the error msg
 const loginUser = async (req, res) => {
@@ -11,7 +11,7 @@ const loginUser = async (req, res) => {
     const token = await user.generateAuthToken();
     res.send({ user, token });
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    sendError(res, 400, error);
   }
 };
 
@@ -24,7 +24,7 @@ const signupUser = async (req, res) => {
     const token = await user.generateAuthToken();
     res.status(201).send({ user, token });
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    sendError(res, 500, error);
   }
 };
 
@@ -36,7 +36,7 @@ const logoutUser = async (req, res) => {
     await req.user.save();
     res.send();
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    sendError(res, 500, error);
   }
 };
 
@@ -44,7 +44,7 @@ const getLoggedInUser = async (req, res) => {
   try {
     res.send({ user: req.user, token: req.token });
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    sendError(res, 500, error);
   }
 };
 

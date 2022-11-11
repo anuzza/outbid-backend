@@ -14,7 +14,7 @@ const itemSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      // required: true,
+      required: true,
     },
     starting_amount: {
       type: Number,
@@ -24,10 +24,6 @@ const itemSchema = new mongoose.Schema(
       type: String,
       enum: ["NEW", "USED"],
       required: true,
-    },
-    active: {
-      type: Boolean,
-      default: true,
     },
 
     current_bid: {
@@ -42,7 +38,7 @@ const itemSchema = new mongoose.Schema(
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      // default: null,
+      required: true,
     },
     winner: {
       type: mongoose.Schema.Types.ObjectId,
@@ -51,9 +47,8 @@ const itemSchema = new mongoose.Schema(
     },
     images: [
       {
-        image: {
-          type: String,
-        },
+        type: String,
+        trim: true,
       },
     ],
     bids: [
@@ -86,22 +81,6 @@ itemSchema.pre("remove", async function (next) {
   });
   next();
 });
-
-// itemSchema.pre("save", async function (next) {
-//   const item = this;
-
-//   if (item.isModified("description")) {
-//     let des = item.description;
-
-//     if (des.includes("\n")) {
-//       des = des.replace(/\n/g, "");
-//     }
-
-//     item.description = des;
-//   }
-
-//   next();
-// });
 
 const Item = mongoose.model("Item", itemSchema);
 module.exports = Item;
