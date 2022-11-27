@@ -61,6 +61,18 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+userSchema.virtual("bids", {
+  ref: "Bid",
+  localField: "_id",
+  foreignField: "bidder",
+});
+
+userSchema.virtual("items", {
+  ref: "Item",
+  localField: "_id",
+  foreignField: "creator",
+});
+
 userSchema.methods.toJSON = function () {
   const user = this;
   const userObject = user.toObject();

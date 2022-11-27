@@ -3,6 +3,7 @@ const cors = require("cors");
 const connectDB = require("./src/database/mongoose");
 const userRouter = require("./src/routes/user");
 const itemRouter = require("./src/routes/item");
+const bidRouter = require("./src/routes/bid");
 
 connectDB();
 
@@ -16,10 +17,7 @@ app.use(express.urlencoded({ extended: true })); // for form data
 
 app.use("/users", userRouter);
 app.use("/items", itemRouter);
-app.get("/:id", async (req, res) => {
-  console.log(req.params);
-  res.send({ msg: "hello world" });
-});
+app.use("/bids", bidRouter);
 
 app.listen(port, () => {
   console.log("Server is up on port: " + port);

@@ -4,6 +4,7 @@ const {
   loginUser,
   logoutUser,
   getLoggedInUser,
+  getMyBids,
 } = require("../controllers/userController");
 const auth = require("../middleware/auth");
 
@@ -11,5 +12,7 @@ router.post("/", signupUser);
 router.post("/login", loginUser);
 router.delete("/logout", auth, logoutUser);
 router.get("/me", auth, getLoggedInUser);
+router.get("/bids", auth, getMyBids);
+router.get("/items", auth, getMyBids);
 
 module.exports = router;

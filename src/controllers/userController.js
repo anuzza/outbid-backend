@@ -48,9 +48,29 @@ const getLoggedInUser = async (req, res) => {
   }
 };
 
+const getMyBids = async (req, res) => {
+  try {
+    await req.user.populate("bids");
+    res.send(req.user.bids);
+  } catch (error) {
+    sendError(res, 500, error);
+  }
+};
+
+const getMyItems = async (req, res) => {
+  try {
+    await req.user.populate("items");
+    res.send(req.user.items);
+  } catch (error) {
+    sendError(res, 500, error);
+  }
+};
+
 module.exports = {
   signupUser,
   loginUser,
   logoutUser,
   getLoggedInUser,
+  getMyBids,
+  getMyItems,
 };

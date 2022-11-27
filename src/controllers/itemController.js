@@ -1,5 +1,4 @@
 const Item = require("../models/item");
-const UserItem = require("../models/userItem");
 const AmazonS3URI = require("amazon-s3-uri");
 const fileUpload = require("../services/multer");
 const deleteFile = require("../services/deleteFile");
@@ -30,6 +29,7 @@ const addItem = async (req, res) => {
         const item = new Item({
           ...req.body,
           creator: req.user,
+          current_bid: req.body.starting_amount,
         });
 
         for (let i = 0; i < req.files.length; i++) {
@@ -38,7 +38,11 @@ const addItem = async (req, res) => {
         await item.save();
         return res.send(item);
       } else {
-        return sendError(res, 400, new Error("Please upload at least 1 image!"));
+        return sendError(
+          res,
+          400,
+          new Error("Please upload at least 1 image!")
+        );
       }
     });
   } catch (error) {

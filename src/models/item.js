@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const UserItem = require("./userItem");
+const Bid = require("./bid");
 
 const itemSchema = new mongoose.Schema(
   {
@@ -49,23 +49,6 @@ const itemSchema = new mongoose.Schema(
       {
         type: String,
         trim: true,
-      },
-    ],
-    bids: [
-      {
-        amount: {
-          type: Number,
-          required: true,
-        },
-        bidder: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-          required: true,
-        },
-        bidded_at: {
-          type: Date,
-          default: Date.now(),
-        },
       },
     ],
   },
