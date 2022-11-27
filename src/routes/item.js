@@ -16,5 +16,6 @@ const {
 
 router.post("/", auth, addItem);
 router.get("/", getItems);
+router.get("/:id", getItembyID);
 
 module.exports = router;

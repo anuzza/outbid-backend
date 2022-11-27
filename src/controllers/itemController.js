@@ -56,19 +56,19 @@ const getMyItem = async (req, res) => {};
 const deleteItem = async (req, res) => {};
 const getSavedItem = async (req, res) => {};
 
-// const uploadImage = async (req, res) => {
-//   const item = await Item.findById(req.params.id);
-//   if (!item) {
-//     return res.status(400).send({
-//       err: "No such item found",
-//     });
-//   }
-//   //item.images = req.file.location;
-//   await item.save();
-//   res.send();
-// };
-
-const getItembyID = async (req, res) => {};
+const getItembyID = async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) {
+      return res.status(400).send({
+        err: "No such item found",
+      });
+    }
+    res.send(item);
+  } catch (error) {
+    sendError(res, 500, error);
+  }
+};
 
 module.exports = {
   addItem,
@@ -77,5 +77,5 @@ module.exports = {
   getMyItem,
   deleteItem,
   getSavedItem,
-  // uploadImage,
+  getItembyID,
 };
