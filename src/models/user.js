@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const SavedItem = require("./savedItem");
+const Item = require("./item");
+const Bid = require("./bid");
 
 const userSchema = new mongoose.Schema(
   {
@@ -56,21 +59,32 @@ const userSchema = new mongoose.Schema(
     },
   },
   {
-    toJSON: true,
+    toJSON: {
+      virtuals: true,
+    },
+    toObject: {
+      virtuals: true,
+    },
     timestamps: true,
   }
 );
 
 userSchema.virtual("bids", {
-  ref: "Bid",
+  ref: Bid,
   localField: "_id",
   foreignField: "bidder",
 });
 
 userSchema.virtual("items", {
-  ref: "Item",
+  ref: Item,
   localField: "_id",
   foreignField: "creator",
+});
+
+userSchema.virtual("savedItems", {
+  ref: SavedItem,
+  localField: "_id",
+  foreignField: "user",
 });
 
 userSchema.methods.toJSON = function () {

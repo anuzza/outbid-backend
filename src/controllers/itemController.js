@@ -53,16 +53,27 @@ const addItem = async (req, res) => {
 const updateItem = async (req, res) => {};
 
 const getMyItem = async (req, res) => {};
-const deleteItem = async (req, res) => {};
+const deleteItem = async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) {
+      sendError(res, 400, new Error("Item doesn't exist!"));
+      return;
+    }
+    await item.remove();
+    res.send();
+  } catch (error) {
+    sendError(res, 500, error);
+  }
+};
 const getSavedItem = async (req, res) => {};
 
 const getItembyID = async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
     if (!item) {
-      return res.status(400).send({
-        err: "No such item found",
-      });
+      sendError(res, 400, new Error("Item doesn't exist!"));
+      return;
     }
     res.send(item);
   } catch (error) {

@@ -1,12 +1,8 @@
 const mongoose = require("mongoose");
 
-const bidSchema = new mongoose.Schema(
+const savedItemSchema = new mongoose.Schema(
   {
-    amount: {
-      type: Number,
-      required: true,
-    },
-    bidder: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -22,5 +18,5 @@ const bidSchema = new mongoose.Schema(
   }
 );
 
-const Bid = mongoose.model("Bid", bidSchema);
-module.exports = Bid;
+const SavedItem = mongoose.model("SavedItem", savedItemSchema);
+module.exports = SavedItem;

@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
+const deleteFile = require("../services/deleteFile");
 const Bid = require("./bid");
+const SavedItem = require("./savedItem");
 
 const itemSchema = new mongoose.Schema(
   {
@@ -59,9 +61,21 @@ const itemSchema = new mongoose.Schema(
 
 itemSchema.pre("remove", async function (next) {
   const item = this;
-  await UserItem.deleteMany({
-    item: item,
+  const db = this.db;
+  await db.transaction(async function (session) {
+    for (image of item.images) {
+      deleteFile(image);
+    }
+    await db.model("Bid").deleteMany({ item }).session(session);
+    await db.model("SavedItem").deleteMany({ item }).session(session);
   });
+
+  // await Bid.deleteMany({
+  //   item,
+  // });
+  // await SavedItem.deleteMany({
+  //   item,
+  // });
   next();
 });
 

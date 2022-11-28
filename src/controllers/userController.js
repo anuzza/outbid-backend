@@ -42,6 +42,14 @@ const logoutUser = async (req, res) => {
 
 const getLoggedInUser = async (req, res) => {
   try {
+    await req.user.populate({
+      path: "savedItems", // virtual
+      populate: {
+        path: "item", // virtual
+        model: "Item",
+        select: "_id",
+      },
+    });
     res.send({ user: req.user, token: req.token });
   } catch (error) {
     sendError(res, 500, error);
@@ -50,7 +58,13 @@ const getLoggedInUser = async (req, res) => {
 
 const getMyBids = async (req, res) => {
   try {
-    await req.user.populate("bids");
+    await req.user.populate({
+      path: "bids", // virtual
+      populate: {
+        path: "item", // virtual
+        model: "Item",
+      },
+    });
     res.send(req.user.bids);
   } catch (error) {
     sendError(res, 500, error);
@@ -66,6 +80,21 @@ const getMyItems = async (req, res) => {
   }
 };
 
+const getMySavedItems = async (req, res) => {
+  try {
+    await req.user.populate({
+      path: "savedItems", // virtual
+      populate: {
+        path: "item", // virtual
+        model: "Item",
+      },
+    });
+    res.send(req.user.savedItems);
+  } catch (error) {
+    sendError(res, 500, error);
+  }
+};
+
 module.exports = {
   signupUser,
   loginUser,
@@ -73,4 +102,5 @@ module.exports = {
   getLoggedInUser,
   getMyBids,
   getMyItems,
+  getMySavedItems,
 };
