@@ -32,10 +32,9 @@ const itemSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-
-    sold: {
-      type: Boolean,
-      default: false,
+    end_date: {
+      type: Date,
+      required: true,
     },
     creator: {
       type: mongoose.Schema.Types.ObjectId,
@@ -70,12 +69,6 @@ itemSchema.pre("remove", async function (next) {
     await db.model("SavedItem").deleteMany({ item }).session(session);
   });
 
-  // await Bid.deleteMany({
-  //   item,
-  // });
-  // await SavedItem.deleteMany({
-  //   item,
-  // });
   next();
 });
 

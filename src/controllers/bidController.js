@@ -4,6 +4,7 @@ const sendError = require("../utils/error");
 const { startSession } = require("mongoose");
 
 const addBids = async (req, res) => {
+  console.log(req.body.itemId);
   const session = await startSession();
   try {
     session.startTransaction();
@@ -22,14 +23,6 @@ const addBids = async (req, res) => {
       return;
     }
 
-    // const exists = await Bid.findOne({
-    //   bidder: req.user,
-    //   item: req.body.itemId,
-    // });
-    // if exists{
-
-    // }
-
     if (item.current_bid >= req.body.amount) {
       await session.abortTransaction();
       session.endSession();
@@ -41,12 +34,22 @@ const addBids = async (req, res) => {
       return;
     }
 
-    const bid = new Bid({
-      amount: req.body.amount,
+    let bid = await Bid.findOne({
+      item,
       bidder: req.user,
-      item: req.body.itemId,
     });
-    await bid.save({ session });
+
+    if (bid) {
+      bid.amount = req.body.amount;
+      await bid.save({ session });
+    } else {
+      bid = new Bid({
+        amount: req.body.amount,
+        bidder: req.user,
+        item: req.body.itemId,
+      });
+      await bid.save({ session });
+    }
 
     //update item current bid
     item.current_bid = bid.amount;

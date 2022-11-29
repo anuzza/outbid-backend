@@ -1,7 +1,5 @@
 const Item = require("../models/item");
-const AmazonS3URI = require("amazon-s3-uri");
 const fileUpload = require("../services/multer");
-const deleteFile = require("../services/deleteFile");
 const sendError = require("../utils/error");
 
 const upload = fileUpload();
@@ -9,7 +7,11 @@ const multiUpload = upload.array("files", 3);
 
 const getItems = async (req, res) => {
   try {
-    const items = await Item.find({ sold: false });
+    const items = await Item.find({
+      end_date: {
+        $gte: new Date().toISOString(),
+      },
+    });
     res.send(items);
   } catch (error) {
     sendError(res, 400, error);
@@ -50,9 +52,6 @@ const addItem = async (req, res) => {
   }
 };
 
-const updateItem = async (req, res) => {};
-
-const getMyItem = async (req, res) => {};
 const deleteItem = async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
@@ -66,13 +65,19 @@ const deleteItem = async (req, res) => {
     sendError(res, 500, error);
   }
 };
-const getSavedItem = async (req, res) => {};
 
 const getItembyID = async (req, res) => {
+  const now = new Date();
+
   try {
     const item = await Item.findById(req.params.id);
+    const itemHasEnded = now >= item.end_date;
+    if (itemHasEnded) {
+      sendError(res, 404, new Error("This auction has already ended!"));
+      return;
+    }
     if (!item) {
-      sendError(res, 400, new Error("Item doesn't exist!"));
+      sendError(res, 404, new Error("Item doesn't exist!"));
       return;
     }
     res.send(item);
@@ -84,9 +89,6 @@ const getItembyID = async (req, res) => {
 module.exports = {
   addItem,
   getItems,
-  updateItem,
-  getMyItem,
   deleteItem,
-  getSavedItem,
   getItembyID,
 };
