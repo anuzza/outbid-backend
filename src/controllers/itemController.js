@@ -9,7 +9,7 @@ const getItems = async (req, res) => {
   try {
     const items = await Item.find({
       end_date: {
-        $gte: new Date().toISOString(),
+        $gte: new Date(),
       },
     });
     res.send(items);
@@ -71,11 +71,6 @@ const getItembyID = async (req, res) => {
 
   try {
     const item = await Item.findById(req.params.id);
-    const itemHasEnded = now >= item.end_date;
-    if (itemHasEnded) {
-      sendError(res, 404, new Error("This auction has already ended!"));
-      return;
-    }
     if (!item) {
       sendError(res, 404, new Error("Item doesn't exist!"));
       return;
@@ -86,9 +81,29 @@ const getItembyID = async (req, res) => {
   }
 };
 
+const markItemAsSold = async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) {
+      sendError(res, 404, new Error("Item doesn't exist!"));
+      return;
+    }
+    if (!item.winner || item?.winner?.toString() !== req.user._id.toString()) {
+      sendError(res, 404, new Error("You cannot buy this item!!"));
+      return;
+    }
+    item.sold = true;
+    await item.save();
+    res.send();
+  } catch (error) {
+    sendError(res, 500, error);
+  }
+};
+
 module.exports = {
   addItem,
   getItems,
   deleteItem,
   getItembyID,
+  markItemAsSold,
 };

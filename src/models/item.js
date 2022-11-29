@@ -46,6 +46,10 @@ const itemSchema = new mongoose.Schema(
       ref: "User",
       default: null,
     },
+    sold: {
+      type: Boolean,
+      default: false,
+    },
     images: [
       {
         type: String,

@@ -4,7 +4,7 @@ const sendError = require("../utils/error");
 const { startSession } = require("mongoose");
 
 const addBids = async (req, res) => {
-  console.log(req.body.itemId);
+  const now = new Date();
   const session = await startSession();
   try {
     session.startTransaction();
@@ -23,6 +23,12 @@ const addBids = async (req, res) => {
       return;
     }
 
+    if (now >= item?.end_date.getTime()) {
+      await session.abortTransaction();
+      session.endSession();
+      sendError(res, 401, new Error("Auction has already ended!"));
+      return;
+    }
     if (item.current_bid >= req.body.amount) {
       await session.abortTransaction();
       session.endSession();
@@ -53,6 +59,7 @@ const addBids = async (req, res) => {
 
     //update item current bid
     item.current_bid = bid.amount;
+    item.winner = bid.bidder;
     await item.save({ session });
 
     await session.commitTransaction();
